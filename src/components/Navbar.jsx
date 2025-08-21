@@ -12,10 +12,11 @@ function Navbar() {
         {/* Logo + Name */}
         <a href="#home" className="flex items-center space-x-3">
           <img
-            src="/logo.jpg"
+            src="/logo.png"
             alt="Logo"
             className="h-10 w-auto object-contain"
           />
+
           <span className="text-base sm:text-xl font-bold text-gray-800">
             Homeric IND Sports Management
           </span>
