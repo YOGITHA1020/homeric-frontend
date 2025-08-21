@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import About from "./About";
 
-const API_BASE = "https://homeric-back.onrender.com"; // Your deployed backend
+const API_BASE = "https://homeric-back.onrender.com"; // Update if backend URL changes
 
 const services = [
   { name: "Badminton", img: "https://www.shutterstock.com/image-photo/professional-tournament-badminton-court-nobody-600nw-615785603.jpg" },
@@ -25,10 +25,12 @@ const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    // Fetch projects
     axios.get(`${API_BASE}/api/projects`)
       .then(res => setProjects(res.data))
       .catch(err => console.error("Failed to fetch projects", err));
 
+    // Fetch clients
     axios.get(`${API_BASE}/api/cli`)
       .then(res => setClients(res.data))
       .catch(err => console.error("Failed to fetch clients", err));
@@ -88,119 +90,108 @@ const Home = () => {
         </div>
       </section>
 
-{/* Projects Section */}
-<section className="py-16 px-6 bg-gradient-to-r from-[#a7f3d0] to-[#d9f99d]" id="projects">
-  <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Our Projects</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-    {projects.map((project) => {
-      const { title, location, type, images } = project;
-      return (
-        <div key={project._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:scale-105 transition-transform duration-300">
-          <div className="overflow-x-auto whitespace-nowrap scroll-smooth px-2 pt-2 pb-3">
-            {images?.map((img, idx) => {
-              const imageUrl = img.startsWith("http")
-                ? img
-                : `${API_BASE}/uploads/${img}`;
-              return (
-                <img
-                  key={idx}
-                  src={imageUrl}
-                  alt={`${title} ${idx + 1}`}
-                  className="inline-block w-60 h-40 object-cover rounded mr-2 cursor-pointer"
-                  onClick={() => {
-                    setCurrentImages(images);
-                    setCurrentIndex(idx);
-                    setShowModal(true);
-                  }}
-                />
-              );
-            })}
-          </div>
-          <div className="p-5 text-center">
-            <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
-            <p className="text-sm text-gray-500">{location} • {type}</p>
-          </div>
+      {/* Projects Section */}
+      <section className="py-16 px-6 bg-gradient-to-r from-[#a7f3d0] to-[#d9f99d]" id="projects">
+        <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Our Projects</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {projects.map((project) => {
+            const { title, location, type, images } = project;
+            return (
+              <div key={project._id} className="bg-white rounded-xl shadow-md overflow-hidden hover:scale-105 transition-transform duration-300">
+                <div className="overflow-x-auto whitespace-nowrap scroll-smooth px-2 pt-2 pb-3">
+                  {images?.map((img, idx) => {
+                    const imageUrl = img.startsWith("http") ? img : `${API_BASE}/uploads/${img}`;
+                    return (
+                      <img
+                        key={idx}
+                        src={imageUrl}
+                        alt={`${title} ${idx + 1}`}
+                        className="inline-block w-60 h-40 object-cover rounded mr-2 cursor-pointer"
+                        onClick={() => {
+                          setCurrentImages(images);
+                          setCurrentIndex(idx);
+                          setShowModal(true);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="p-5 text-center">
+                  <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
+                  <p className="text-sm text-gray-500">{location} • {type}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
 
-  {/* Image Modal */}
-  {showModal && (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center"
-      onClick={() => setShowModal(false)}
-    >
-      <div
-        className="relative max-w-4xl w-full px-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <img
-          src={
-            currentImages[currentIndex].startsWith("http")
-              ? currentImages[currentIndex]
-              : `${API_BASE}/uploads/${currentImages[currentIndex]}`
-          }
-          alt="Preview"
-          className="w-full max-h-[80vh] object-contain rounded-lg"
-        />
-        <button
-          onClick={() =>
-            setCurrentIndex((prev) =>
-              prev > 0 ? prev - 1 : currentImages.length - 1
-            )
-          }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white text-4xl font-bold"
-        >
-          ‹
-        </button>
-        <button
-          onClick={() =>
-            setCurrentIndex((prev) =>
-              prev < currentImages.length - 1 ? prev + 1 : 0
-            )
-          }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white text-4xl font-bold"
-        >
-          ›
-        </button>
-        <button
-          onClick={() => setShowModal(false)}
-          className="absolute top-3 right-3 text-white text-3xl"
-        >
-          ×
-        </button>
-      </div>
-    </div>
-  )}
-</section>
-{/* Clients Section */}
-{/* Clients Section */}
-<section className="py-16 px-6 bg-gradient-to-r from-[#a7f3d0] to-[#d9f99d]" id="clients">
-  <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Our Clients</h2>
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-    {clients.map((client) => (
-      <div
-        key={client._id}
-        className="bg-white rounded-xl shadow-md p-5 text-center flex flex-col items-center hover:scale-105 transition-transform duration-300"
-      >
-        {client.image && (
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500 mb-2">
-            <img
-              src={client.image}
-              alt={client.name}
-              className="w-full h-full object-cover"
-            />
+        {/* Image Modal */}
+        {showModal && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center"
+            onClick={() => setShowModal(false)}
+          >
+            <div className="relative max-w-4xl w-full px-4" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={
+                  currentImages[currentIndex].startsWith("http")
+                    ? currentImages[currentIndex]
+                    : `${API_BASE}/uploads/${currentImages[currentIndex]}`
+                }
+                alt="Preview"
+                className="w-full max-h-[80vh] object-contain rounded-lg"
+              />
+              <button
+                onClick={() =>
+                  setCurrentIndex((prev) =>
+                    prev > 0 ? prev - 1 : currentImages.length - 1
+                  )
+                }
+                className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white text-4xl font-bold"
+              >
+                ‹
+              </button>
+              <button
+                onClick={() =>
+                  setCurrentIndex((prev) =>
+                    prev < currentImages.length - 1 ? prev + 1 : 0
+                  )
+                }
+                className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white text-4xl font-bold"
+              >
+                ›
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="absolute top-3 right-3 text-white text-3xl"
+              >
+                ×
+              </button>
+            </div>
           </div>
         )}
-        <h3 className="text-lg font-semibold text-gray-800 mt-2 break-words">
-          {client.name}
-        </h3>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
 
+      {/* Clients Section */}
+      <section className="py-16 px-6 bg-gradient-to-r from-[#a7f3d0] to-[#d9f99d]" id="clients">
+        <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">Our Clients</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {clients.map((client) => (
+            <div key={client._id} className="bg-white rounded-xl shadow-md p-5 text-center flex flex-col items-center hover:scale-105 transition-transform duration-300">
+              {client.image && (
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500 mb-2">
+                  <img
+                    src={client.image.startsWith("http") ? client.image : `${API_BASE}/uploads/${client.image}`}
+                    alt={client.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <h3 className="text-lg font-semibold text-gray-800 mt-2 break-words">{client.name}</h3>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Contact Section */}
       <section className="py-16 px-6 bg-gradient-to-r from-[#a7f3d0] to-[#d9f99d]" id="contacts">
@@ -229,7 +220,7 @@ const Home = () => {
               <li className="flex items-start gap-3"><span className="text-green-500 text-xl">✔️</span> Specialized in Badminton, Tennis, Yoga Areas, and More</li>
               <li className="flex items-start gap-3"><span className="text-green-500 text-xl">✔️</span> End-to-End Maintenance & Modern Designs</li>
               <li className="flex items-start gap-3"><span className="text-green-500 text-xl">✔️</span> Trusted by Schools, Townships & Clubs</li>
-              <li className="flex items-start gap-3"><span className="text-green-500 text-xl">✔️</span> Quality Work. On-Time Delivery. Client Satisfaction.</li>
+              <li className="flex items-start gap-3"><span className="text-green-500 text-xl">✔️ Quality Work. On-Time Delivery. Client Satisfaction.</span></li>
             </ul>
           </div>
         </div>

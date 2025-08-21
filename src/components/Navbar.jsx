@@ -12,7 +12,7 @@ function Navbar() {
         {/* Logo + Name */}
         <a href="#home" className="flex items-center space-x-3">
           <img
-            src="/logo.png"
+            src="/logo.jpg"
             alt="Logo"
             className="h-10 w-auto object-contain"
           />
