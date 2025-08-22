@@ -69,7 +69,22 @@ function Navbar() {
             <li><a onClick={closeMenu} href="#about">About</a></li>
             <li><a onClick={closeMenu} href="#services">Services</a></li>
             <li><a onClick={closeMenu} href="#projects">Projects</a></li>
-            <li><a onClick={closeMenu} href="#contact">Contact</a></li>
+            <li>
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const section = document.getElementById("contact");
+                    if (section) {
+                      section.scrollIntoView({ behavior: "smooth" });
+                    }
+                    setTimeout(() => setMenuOpen(false), 300); // close menu after scroll starts
+                  }}
+                >
+                  Contact
+                </a>
+            </li>
+
           </ul>
         </div>
       )}
